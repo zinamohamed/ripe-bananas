@@ -63,4 +63,11 @@ describe('ripe-bananas routes', () => {
         })
         
     });
+    it('deletes a reviewer from the db', () => {
+        return request(app)
+        .delete('/api/v1/reviewers/2')
+        .then((res) => {
+            expect(res.body).toEqual({success: true})
+        })
+    })
 })
