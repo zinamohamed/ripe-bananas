@@ -33,7 +33,8 @@ describe('ripe-bananas actor routes', () => {
             });
       });
     
-      it('should get all actors from database', () => {
+    
+    it('should get all actors from database', () => {
         return request(app)
             .post('/api/v1/actors/batch')
             .send(actor)
@@ -54,4 +55,20 @@ describe('ripe-bananas actor routes', () => {
             ]);
         });
     });
+    
+    it('should get one actor by id', async () => {
+      await request(app)
+          .post('/api/v1/actors/batch')
+          .send(actor)
+      const response = await request(app)
+          .get('/api/v1/actors/1')
+          const actorById = 
+              {
+                  id: 1,
+                  createdAt: expect.any(String),
+                  updatedAt: expect.any(String),
+                  ...actor[0],
+              }
+      expect(response.body).toEqual(actorById);
+  })
 });
