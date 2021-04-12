@@ -34,7 +34,7 @@ describe('ripe-bananas actor routes', () => {
       });
     
     
-    it('should get all actors from database', () => {
+    it('test /batch route', () => {
         return request(app)
             .post('/api/v1/actors/batch')
             .send(actor)
@@ -55,6 +55,30 @@ describe('ripe-bananas actor routes', () => {
             ]);
         });
     });
+
+    it('should get ALL actors', async () => {
+      await request(app)
+          .post('/api/v1/actors/batch')
+          .send(actor)
+      const response = await request(app)
+          .get('/api/v1/actors')
+          const allActors = 
+          [
+            {
+                id: 1,
+                createdAt: expect.any(String),
+                updatedAt: expect.any(String),
+                ...actor[0],
+            },
+            {
+                id: 2,
+                createdAt: expect.any(String),
+                updatedAt: expect.any(String),
+                ...actor[1],
+            }
+        ]
+      expect(response.body).toEqual(allActors);
+  })
     
     it('should get one actor by id', async () => {
       await request(app)
