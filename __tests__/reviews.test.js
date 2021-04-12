@@ -25,12 +25,35 @@ describe('ripe-bananas reviews routes', () => {
             .post('/api/v1/reviews')
             .send(reviews[0])
         const expectation = {
-            rating: 4,
-            reviewer: '1',
-            review: "Great film, would see again",
-            film: '1'
+            id: 1,
+            createdAt: expect.any(String),
+            updatedAt: expect.any(String),
+            ...reviews[0] 
         }
-        expect(response).toEqual(expectation);
+        expect(response.body).toEqual(expectation);
+    })      
+    it('should return the top 100 reviews', async () => {
+        await request(app)
+            .post('/api/v1/reviews')
+            .send(reviews[0])
+        await request(app)
+            .post('/api/v1/reviews')
+            .send(reviews[1])
+        const response = await request(app)
+            .get('/api/v1/reviews')
+        const expectation = [
+            {
+                id: 1,
+                createdAt: expect.any(String),
+                updatedAt: expect.any(String),
+                ...reviews[0] 
+            },
+            {
+                id: 2,
+                createdAt: expect.any(String),
+                updatedAt: expect.any(String),
+                ...reviews[1] 
+            }];
+        expect(response.body).toEqual(expectation);
     })  
-
 });

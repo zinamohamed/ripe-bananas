@@ -20,7 +20,7 @@ describe('ripe-bananas studios routes', () => {
             country: 'United States'
         }
     ];
-    it('should creates a new studio and inserts into database', () => {
+    it('should create a new studio and inserts into database', () => {
         return request(app)
             .post('/api/v1/studios')
             .send(studio[0])
