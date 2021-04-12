@@ -14,10 +14,11 @@ describe('ripe-bananas actor routes', () => {
         },
         {
             name: 'Denzel Washington',
-            dob: expect.any(Date),
+            dob: '1954-12-28T07:00:00.000Z',
             pob: 'Mount Vernon'
         }
     ];
+    
     it('should create a new actor and insert it into the db', () => {
         return request(app)
             .post('/api/v1/actors')
@@ -27,10 +28,30 @@ describe('ripe-bananas actor routes', () => {
                     id: 1,
                     createdAt: expect.any(String),
                     updatedAt: expect.any(String),
-                    name: 'Angelina Jolie',
-                    dob: '1975-06-04T07:00:00.000Z',
-                    pob: 'Los Angeles',
+                    ...actor[0],
                 });
             });
+      });
+    
+      it('should get all actors from database', () => {
+        return request(app)
+            .post('/api/v1/actors/batch')
+            .send(actor)
+            .then((res) => {
+                expect(res.body).toEqual([
+                    {
+                        id: 1,
+                        createdAt: expect.any(String),
+                        updatedAt: expect.any(String),
+                        ...actor[0],
+                    },
+                    {
+                        id: 2,
+                        createdAt: expect.any(String),
+                        updatedAt: expect.any(String),
+                        ...actor[1],
+                    }
+            ]);
+        });
     });
 });
