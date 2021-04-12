@@ -68,7 +68,7 @@ describe('ripe-bananas routes', () => {
                     updatedAt: expect.any(String),
                     ...studio[1],
                 }
-        expect(response).toEqual(expectation);
+        expect(response.body).toEqual(expectation);
             
     })
 });
