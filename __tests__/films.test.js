@@ -82,4 +82,19 @@ describe('ripe-bananas film routes', () => {
         ];
       expect(response.body).toEqual(allFilms);
   })
+    it('should get one film by id', async () => {
+      await request(app)
+          .post('/api/v1/films/batch')
+          .send(film)
+      const response = await request(app)
+          .get('/api/v1/films/1')
+          const filmById = 
+              {
+                  id: 1,
+                  createdAt: expect.any(String),
+                  updatedAt: expect.any(String),
+                  ...film[0],
+              }
+      expect(response.body).toEqual(filmById);
+  })
 });
