@@ -2,7 +2,7 @@ const request = require('supertest');
 const app = require('../lib/app');
 const db = require('../lib/utils/sequelize');
 
-describe('ripe-bananas routes', () => {
+describe('ripe-bananas studios routes', () => {
     beforeEach(() => {
         return db.sync({ force: true });
     });
@@ -20,7 +20,7 @@ describe('ripe-bananas routes', () => {
             country: 'United States'
         }
     ];
-    it('should creates a new studio and inserts into database', () => {
+    it('should create a new studio and inserts into database', () => {
         return request(app)
             .post('/api/v1/studios')
             .send(studio[0])
