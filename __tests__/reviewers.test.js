@@ -24,12 +24,35 @@ describe('ripe-bananas routes', () => {
             expect(res.body).toEqual({id:1, createdAt: expect.any(String), updatedAt: expect.any(String), ...reviewers[0]})
         })
     });
+    it('posts a group of new reviewers to the db', () => {
+        return request(app)
+        .post('/api/v1/reviewers/batch')
+        .send(reviewers)
+        .then((res) => {
+            expect(res.body).toEqual([
+                {id:2, createdAt: expect.any(String), updatedAt: expect.any(String), ...reviewers[0]},
+                {id:3, createdAt: expect.any(String), updatedAt: expect.any(String), ...reviewers[1]}
+            ])
+        })
+    });
     it('gets all the reviewers from the db', () => {
         return request(app)
         .get('/api/v1/reviewers/')
-        .send(reviewers[0])
         .then((res) => {
-            expect(res.body).toEqual([{id:1, createdAt: expect.any(String), updatedAt: expect.any(String), ...reviewers[0]}])
+            expect(res.body).toEqual([
+                {id:1, createdAt: expect.any(String), updatedAt: expect.any(String), ...reviewers[0]},
+                {id:2, createdAt: expect.any(String), updatedAt: expect.any(String), ...reviewers[0]},
+                {id:3, createdAt: expect.any(String), updatedAt: expect.any(String), ...reviewers[1]},
+            ])
+        })
+    })
+    it('gets a particular reviewer by id', () => {
+        return request(app)
+        .get('/api/v1/reviewers/3')
+        
+        .then((res) => {
+            console.log(res.body);
+            expect(res.body).toEqual({id: 3, createdAt: expect.any(String), updatedAt: expect.any(String), ...reviewers[1]})
         })
     })
 })
