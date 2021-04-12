@@ -33,25 +33,42 @@ describe('ripe-bananas routes', () => {
                 });
             });
     });
-    it('should get all studios from database', () => {
-        return request(app)
+    it('should get all studios from database', async () => {
+        await request(app)
             .post('/api/v1/studios/batch')
             .send(studio)
-            .then((res) => {
-                expect(res.body).toEqual([
-                    {
-                        id: 1,
-                        createdAt: expect.any(String),
-                        updatedAt: expect.any(String),
-                        ...studio[0],
-                    },
-                    {
-                        id: 2,
-                        createdAt: expect.any(String),
-                        updatedAt: expect.any(String),
-                        ...studio[1],
-                    }
-            ]);
-        });
+        const response = await request(app)
+            .get('/api/v1/studios')
+        const expectation = [
+            {
+                id: 1,
+                createdAt: expect.any(String),
+                updatedAt: expect.any(String),
+                ...studio[0],
+            },
+            {
+                id: 2,
+                createdAt: expect.any(String),
+                updatedAt: expect.any(String),
+                ...studio[1],
+            }
+        ]
+        expect(response.body).toEqual(expectation);
     });
+    it('should get one studio by id', async () => {
+        await request(app)
+            .post('/api/v1/studios/batch')
+            .send(studio)
+        const response = await request(app)
+            .get('/api/v1/studios/2')
+            const expectation = 
+                {
+                    id: 2,
+                    createdAt: expect.any(String),
+                    updatedAt: expect.any(String),
+                    ...studio[1],
+                }
+        expect(response).toEqual(expectation);
+            
+    })
 });
