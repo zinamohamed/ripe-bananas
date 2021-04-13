@@ -10,14 +10,14 @@ describe('ripe-bananas studios routes', () => {
     beforeEach(async () => {
         await seed();
     });
-    
+
     const studio = {
-            name: "Zina's Production Haus",
-            city: 'New Orleans',
-            state: 'LA',
-            country: 'United States',
-        }
-    
+        name: "Zina's Production Haus",
+        city: 'New Orleans',
+        state: 'LA',
+        country: 'United States',
+    };
+
     it('should create a new studio and inserts into database', () => {
         return request(app)
             .post('/api/v1/studios')
@@ -32,52 +32,38 @@ describe('ripe-bananas studios routes', () => {
             });
     });
     it('should get all studios from database', async () => {
-        const response = await request(app)
-            .get('/api/v1/studios')
+        const response = await request(app).get('/api/v1/studios');
         const expectation = [
             {
                 id: 1,
-                updatedAt: expect.any(String),
-                createdAt: expect.any(String),
-                name: "Paramount",
-                city: "los Angeles",
-                state: "California",
-                country: "United States"
+                name: 'Paramount',
             },
             {
                 id: 2,
-                updatedAt: expect.any(String),
-                createdAt: expect.any(String),
-                name: "Disney",
-                city: "San Paulo",
-                state: "NA",
-                country: "Brazil"
+                name: 'Disney',
             },
             {
                 id: 3,
-                updatedAt: expect.any(String),
-                createdAt: expect.any(String),
-                name: "A24",
-                city: "Denver",
-                state: "Colorado",
-                country: "United States"
+                name: 'A24',
             },
-        ]
+        ];
         expect(response.body).toEqual(expectation);
     });
     it('should get one studio by id', async () => {
-        const response = await request(app)
-            .get('/api/v1/studios/2')
-            const expectation =             {
-                id: 2,
-                updatedAt: expect.any(String),
-                createdAt: expect.any(String),
-                name: "Disney",
-                city: "San Paulo",
-                state: "NA",
-                country: "Brazil"
-            }
+        const response = await request(app).get('/api/v1/studios/2');
+        const expectation = {
+            id: 2,
+            name: 'Disney',
+            city: 'San Paulo',
+            state: 'NA',
+            country: 'Brazil',
+            Films: [
+                {
+                    id: 3,
+                    title: "The Shining"
+                }
+            ]
+        };
         expect(response.body).toEqual(expectation);
-            
-    })
+    });
 });

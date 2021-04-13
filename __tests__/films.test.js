@@ -47,51 +47,28 @@ describe('ripe-bananas film routes', () => {
                 id: 1,
                 title: "Groundhog's Day",
                 released: 1980,
-                StudioId: 1,
-                createdAt: expect.any(String),
-                updatedAt: expect.any(String),
-                cast: [
-                    {
-                        actor: 1,
-                        role: "Groundhog"
-                    },
-                ]
+                Studio: {
+                    id: 1,
+                    name: "Paramount"
+                }
             },
             {
                 id: 2,
                 title: "Star Wars",
                 released: 1995,
-                StudioId: 3,
-                createdAt: expect.any(String),
-                updatedAt: expect.any(String),
-                cast: [
-                    {
-                        actor: 2,
-                        role: "Han Solo"
-                    },
-                    {
-                        actor: 3,
-                        role: "Jabba the Hut"
-                    }
-                ]
+                Studio: {
+                    id: 3,
+                    name: "A24"
+                }
             },
             {
                 id: 3,
                 title: "The Shining",
                 released: 1900,
-                StudioId: 2,
-                createdAt: expect.any(String),
-                updatedAt: expect.any(String),
-                cast: [
-                    {
-                        actor: 1,
-                        role: "Jack"
-                    },
-                    {
-                        actor: 4,
-                        role: "Jill"
-                    }
-                ]
+                Studio: {
+                    id: 2,
+                    name: "Disney"
+                }
             },
         ];
         expect(response.body).toEqual(allFilms);
