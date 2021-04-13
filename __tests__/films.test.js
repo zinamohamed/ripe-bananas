@@ -1,100 +1,95 @@
 const request = require('supertest');
 const app = require('../lib/app');
+const seed = require('../lib/utils/seed');
 const db = require('../lib/utils/sequelize');
 
 describe('ripe-bananas film routes', () => {
     beforeEach(() => {
         return db.sync({ force: true });
     });
-    const film = [
-        {
-            title: 'Mean Girls',
-            studio: 5,
-            released: 2004,
-        },
-        {
-            title: 'Eternal Sunshine of the Spotless Mind',
-            studio: 2,
-            released: 2004,
-        }
-    ];
+    beforeEach(async () => {
+        await seed();
+    });
+    const film = {
+        title: "Clockwork Orange",
+        released: 1976,
+        StudioId: 1,
+        cast: [
+            {
+                actor: 1,
+                role: "Johnny"
+            },
+            {
+                actor: 3,
+                role: "Jimmy"
+            }
+        ]
+    }
 
     it('should create a new film and insert it into the db', () => {
-      return request(app)
-          .post('/api/v1/films')
-          .send(film[0])
-          .then((res) => {
-              expect(res.body).toEqual({
-                  id: 1,
-                  createdAt: expect.any(String),
-                  updatedAt: expect.any(String),
-                  ...film[0],
-              });
-          });
+        return request(app)
+            .post('/api/v1/films')
+            .send(film)
+            .then((res) => {
+                expect(res.body).toEqual({
+                    id: 4,
+                    createdAt: expect.any(String),
+                    updatedAt: expect.any(String),
+                    ...film,
+                });
+            });
     });
-
-    it('test /batch route', () => {
-      return request(app)
-          .post('/api/v1/films/batch')
-          .send(film)
-          .then((res) => {
-              expect(res.body).toEqual([
-                  {
-                      id: 1,
-                      createdAt: expect.any(String),
-                      updatedAt: expect.any(String),
-                      ...film[0],
-                  },
-                  {
-                      id: 2,
-                      createdAt: expect.any(String),
-                      updatedAt: expect.any(String),
-                      ...film[1],
-                  }
-          ]);
-      });
-  });
-  
     it('should get ALL films', async () => {
-      await request(app)
-          .post('/api/v1/films/batch')
-          .send(film)
-      const response = await request(app)
-          .get('/api/v1/films')
-          const allFilms = 
-          [
+        await request(app).post('/api/v1/films/batch').send(film);
+        const response = await request(app).get('/api/v1/films');
+        const allFilms = [
             {
                 id: 1,
-                createdAt: expect.any(String),
-                updatedAt: expect.any(String),
-                title: 'Mean Girls',
-                studio: 5,
-                released: 2004,
+                title: "Groundhog's Day",
+                released: 1980,
+                Studio: {
+                    id: 1,
+                    name: "Paramount"
+                }
             },
             {
                 id: 2,
-                createdAt: expect.any(String),
-                updatedAt: expect.any(String),
-                title: 'Eternal Sunshine of the Spotless Mind',
-                studio: 2,
-                released: 2004,
-            }
+                title: "Star Wars",
+                released: 1995,
+                Studio: {
+                    id: 3,
+                    name: "A24"
+                }
+            },
+            {
+                id: 3,
+                title: "The Shining",
+                released: 1900,
+                Studio: {
+                    id: 2,
+                    name: "Disney"
+                }
+            },
         ];
-      expect(response.body).toEqual(allFilms);
-  })
+        expect(response.body).toEqual(allFilms);
+    });
     it('should get one film by id', async () => {
-      await request(app)
-          .post('/api/v1/films/batch')
-          .send(film)
-      const response = await request(app)
-          .get('/api/v1/films/1')
-          const filmById = 
-              {
-                  id: 1,
-                  createdAt: expect.any(String),
-                  updatedAt: expect.any(String),
-                  ...film[0],
-              }
-      expect(response.body).toEqual(filmById);
-  })
+        const response = await request(app).get('/api/v1/films/1');
+
+        const filmById = {
+            id: 1,
+            title: "Groundhog's Day",
+            released: 1980,
+            StudioId: 1,
+            createdAt: expect.any(String),
+            updatedAt: expect.any(String),
+            cast: [
+                {
+                    actor: 1,
+                    role: "Groundhog"
+                },
+            ]
+        };
+        expect(response.body).toEqual(filmById);
+    });
 });

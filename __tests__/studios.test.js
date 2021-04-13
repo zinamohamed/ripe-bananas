@@ -1,74 +1,69 @@
 const request = require('supertest');
 const app = require('../lib/app');
+const seed = require('../lib/utils/seed');
 const db = require('../lib/utils/sequelize');
 
 describe('ripe-bananas studios routes', () => {
     beforeEach(() => {
         return db.sync({ force: true });
     });
-    const studio = [
-        {
-            name: "Zina's Production Haus",
-            city: 'New Orleans',
-            state: 'LA',
-            country: 'United States',
-        },
-        {
-            name: "Dylan's Montana Special Steakhouse Production Nightmare",
-            city: "Missoula",
-            state: "MT",
-            country: 'United States'
-        }
-    ];
+    beforeEach(async () => {
+        await seed();
+    });
+
+    const studio = {
+        name: "Zina's Production Haus",
+        city: 'New Orleans',
+        state: 'LA',
+        country: 'United States',
+    };
+
     it('should create a new studio and inserts into database', () => {
         return request(app)
             .post('/api/v1/studios')
-            .send(studio[0])
+            .send(studio)
             .then((res) => {
                 expect(res.body).toEqual({
-                    id: 1,
+                    id: 4,
                     createdAt: expect.any(String),
                     updatedAt: expect.any(String),
-                    ...studio[0],
+                    ...studio,
                 });
             });
     });
     it('should get all studios from database', async () => {
-        await request(app)
-            .post('/api/v1/studios/batch')
-            .send(studio)
-        const response = await request(app)
-            .get('/api/v1/studios')
+        const response = await request(app).get('/api/v1/studios');
         const expectation = [
             {
                 id: 1,
-                createdAt: expect.any(String),
-                updatedAt: expect.any(String),
-                ...studio[0],
+                name: 'Paramount',
             },
             {
                 id: 2,
-                createdAt: expect.any(String),
-                updatedAt: expect.any(String),
-                ...studio[1],
-            }
-        ]
+                name: 'Disney',
+            },
+            {
+                id: 3,
+                name: 'A24',
+            },
+        ];
         expect(response.body).toEqual(expectation);
     });
     it('should get one studio by id', async () => {
-        await request(app)
-            .post('/api/v1/studios/batch')
-            .send(studio)
-        const response = await request(app)
-            .get('/api/v1/studios/2')
-            const expectation = 
+        const response = await request(app).get('/api/v1/studios/2');
+        const expectation = {
+            id: 2,
+            name: 'Disney',
+            city: 'San Paulo',
+            state: 'NA',
+            country: 'Brazil',
+            Films: [
                 {
-                    id: 2,
-                    createdAt: expect.any(String),
-                    updatedAt: expect.any(String),
-                    ...studio[1],
+                    id: 3,
+                    title: "The Shining"
                 }
+            ]
+        };
         expect(response.body).toEqual(expectation);
-            
-    })
+    });
 });
