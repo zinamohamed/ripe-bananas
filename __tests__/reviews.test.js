@@ -4,23 +4,44 @@ const db = require('../lib/utils/sequelize');
 
 describe('ripe-bananas reviews routes', () => {
     beforeEach(() => {
+        
         return db.sync({ force: true });
     });
     const reviews = [
         {
             rating: 4,
-            reviewer: '1',
+            ReviewerId: 1,
             review: "Great film, would see again",
-            film: '1'
+            FilmId: 1,
         },
         {
             rating: 2,
-            reviewer: '2',
+            ReviewerId: 1,
             review: "Very bad movie",
-            film: '2'
+            FilmId: 2
         }
     ]
+    const reviewer = {
+        name: "Weasel",
+        company: "Rocks"
+    }
+    const film = {
+        title: 'Shit Masters',
+        released: 1986,
+        cast: [
+            {
+                actor: "Kermit",
+                role: "Frog"
+            }
+        ]
+    }
     it('should post a review to the reviews table', async () => {
+        await request(app)
+            .post('/api/v1/films')
+            .send(film)
+        await request(app)
+            .post('/api/v1/reviewers')
+            .send(reviewer)
         const response = await request(app)
             .post('/api/v1/reviews')
             .send(reviews[0])
